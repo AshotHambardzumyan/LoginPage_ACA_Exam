@@ -1,0 +1,62 @@
+﻿@model IEnumerable<WebAppMVC1.Models.Invoice>
+@using WebAppMVC1.Models;
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Invoices</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaidDate)
+            </th>
+            <th>Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var categories = (List<long?>)ViewData["TotalAmount"]; // TotalAmount-i List
+            var invL = ViewBag.InvLines;
+        }
+        @{
+            int i = 0;
+            List<InvoiceLine> invlines = invL.Items;
+        }
+        @foreach (var item in Model)
+        {
+            var query = invlines.Where(x => x.InvoiceId == item.InvoiceId);
+
+            <tr>
+                <td>
+                    <select class="form-control" aria-label="Books nad Snippets">
+                        <option>@Html.DisplayFor(modelItem => item.Name)</option>
+
+                        <optgroup label="InvoiceLine IDs">
+
+                            @foreach (var inL in query)
+                            {
+                                <option disabled>@inL.InvoiceLineId</option>
+                            }
+                        </optgroup>
+                    </select>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaidDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => categories[i])
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Create" class="btn btn-info">Log Out (@ViewBag.UserName)</a>
+</div>
