@@ -33,7 +33,88 @@ namespace WebAppMVC1.Controllers
 
             ViewBag.UserName = HttpContext.Request.Cookies["username"];
 
+            List<string> invN = new List<string>();
+
+            foreach (var item in _context.Invoices)
+            {
+                invN.Add(item.Name);
+            }
+            ViewBag.InvNames = invN;
+
             return View(inv);
+        }
+
+
+        [HttpPost]
+        public ActionResult InvoiceLines(IFormCollection frm)
+        {
+            string button = frm["Invoice"].ToString();
+            List<InvoiceLine> invl = new List<InvoiceLine>();
+            List<Product> prod = new List<Product>();
+            List<long?> total = new List<long?>();
+
+            List<Invoice> invoice = _context.Invoices.Where(x => x.Name == button).ToList();
+
+            foreach (var item in invoice)
+            {
+                invl = _context.InvoiceLines.Where(x => x.InvoiceId == item.InvoiceId).ToList();
+
+                foreach (var elem in invl)
+                {
+                    List<Product> prodx = _context.Products.Where(x => x.ProductId == elem.ProductId).ToList();
+                    foreach (var pr in prodx)
+                    {
+                        total.Add(pr.Price * elem.Quantity);
+                    }
+                    prod.Add(prodx[0]);
+                }
+            }
+            ViewData["ILiness"] = invl;
+
+            ViewBag.InvLin = invl;
+            ViewBag.Products = prod;
+            ViewBag.Total = total;
+
+            ViewBag.Price = "555888";
+
+            //return RedirectToAction(nameof(Index));
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Index(IFormCollection frm)
+        {
+            string button = frm["Invoice"].ToString();
+            List<InvoiceLine> invl = new List<InvoiceLine>();
+            List<Product> prod = new List<Product>();
+            List<long?> total = new List<long?>();
+
+            List<Invoice> invoice = _context.Invoices.Where(x => x.Name == button).ToList();
+
+            foreach (var item in invoice)
+            {
+                invl = _context.InvoiceLines.Where(x => x.InvoiceId == item.InvoiceId).ToList();
+
+                foreach (var elem in invl)
+                {
+                    List<Product> prodx = _context.Products.Where(x => x.ProductId == elem.ProductId).ToList();
+                    foreach (var pr in prodx)
+                    {
+                        total.Add(pr.Price * elem.Quantity);
+                    }
+                    prod.Add(prodx[0]);
+                }
+            }
+            ViewData["ILiness"] = invl;
+
+            ViewBag.InvLin = invl;
+            ViewBag.Products = prod;
+            ViewBag.Total = total;
+
+            ViewBag.Price = "555888";
+
+            //return RedirectToAction(nameof(Index));
+            return View();
         }
 
         public List<long?> TotalAmount(List<Invoice> inv)

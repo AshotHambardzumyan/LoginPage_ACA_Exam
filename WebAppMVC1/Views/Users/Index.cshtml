@@ -18,45 +18,45 @@
             <th>Total Amount</th>
         </tr>
     </thead>
-    <tbody>
-        @{
-            var categories = (List<long?>)ViewData["TotalAmount"]; // TotalAmount-i List
-            var invL = ViewBag.InvLines;
-        }
-        @{
-            int i = 0;
+    @{
+        var categories = (List<long?>)ViewData["TotalAmount"]; // TotalAmount-i List
+        var invL = ViewBag.InvLines;
+    }
+    @{
+        int i = 0;
+        if (invL != null)
+        {
             List<InvoiceLine> invlines = invL.Items;
         }
-        @foreach (var item in Model)
+    }
+
+    <tbody>
+        @using (Html.BeginForm("InvoiceLines", "Users", FormMethod.Post))
         {
-            var query = invlines.Where(x => x.InvoiceId == item.InvoiceId);
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
 
-            <tr>
-                <td>
-                    <select class="form-control" aria-label="Books nad Snippets">
-                        <option>@Html.DisplayFor(modelItem => item.Name)</option>
-
-                        <optgroup label="InvoiceLine IDs">
-
-                            @foreach (var inL in query)
-                            {
-                                <option disabled>@inL.InvoiceLineId</option>
-                            }
-                        </optgroup>
-                    </select>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaidDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => categories[i])
-                </td>
-            </tr>
-            i++;
+                    <tr>
+                        <td>
+                            @Html.RadioButton("Invoice", item.Name) @item.Name
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PaidDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => categories[i])
+                        </td>
+                    </tr>
+                    i++;
+                }
+            }
+            <input type="submit" value="submit" class="btn-block" />
         }
     </tbody>
 </table>
-
+<br />
 <div>
     <a asp-action="Create" class="btn btn-info">Log Out (@ViewBag.UserName)</a>
 </div>

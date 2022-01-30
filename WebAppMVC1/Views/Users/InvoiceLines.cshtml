@@ -1,0 +1,58 @@
+﻿@model IEnumerable<WebAppMVC1.Models.Account>
+@using WebAppMVC1.Models;
+@{
+    ViewData["Title"] = "InvoiceLines";
+}
+
+<h1>InvoiceLines</h1>
+@{
+    var inLin = ViewBag.InvLin;
+    var prod = ViewBag.Products;
+    var total = ViewBag.Total;
+
+    List<InvoiceLine>
+    iLines = inLin;
+    List<Product>
+        product = prod;
+    List<long?>
+        totals = total;
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+
+
+    <tbody>
+        @for (int i = 0; i < product.Count(); i++)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => product[i].Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product[i].Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => iLines[i].Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => totals[i].Value)
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-controller="Users" asp-action="Index" class="btn btn-info">Go Back</a>
+</div>
